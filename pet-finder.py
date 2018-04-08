@@ -43,27 +43,12 @@ def getDogForId(id, allDogs):
 
 def getUrlForDog(dog):
     try:
-
-        #https://www.petfinder.com/dog/lucy-40607778/mn/elk-river/aussie-rescue-of-minnesota-mn108/
-        #https://www.petfinder.com/dog/romey-39291873/ia/davenport/k9-kindness-rescue-inc-ia96/
-        url = "https://www.petfinder.com/dog/{0}-{1}/{2}/{3}/{4}-{5}"
-        name = dog['name']['$t'].lower().replace(' ','-')
+        url = "https://www.petfinder.com/petdetail/{0}"
         dogId = dog['id']['$t']
-        state = dog['contact']['state']['$t'].lower().replace(' ','-')
-        city = dog['contact']['city']['$t'].lower().replace(' ','-')
-        shelterId = dog['shelterId']['$t']
-        shelterName = getShelterName(shelterId).lower().replace(' ','-')
 
-        return url.format(name, dogId, state, city, shelterName, shelterId.lower().replace(' ','-'))
+        return url.format(dogId)
     except:
         return ''
-
-def getShelterName(shelterId):
-    data = {
-        'key' : sys.argv[1],
-        'id' : shelterId.strip(),
-        'format': 'json'
-    }
 
     request = requests.get('http://api.petfinder.com/shelter.get', params=data)
     jsonDict = request.json()
