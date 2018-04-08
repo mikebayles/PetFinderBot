@@ -41,17 +41,21 @@ def getDogForId(id, allDogs):
         if dog['id']['$t'] == id:
             return dog
 
-def getUrlForDog(dog):    
-    #https://www.petfinder.com/dog/lucy-40607778/mn/elk-river/aussie-rescue-of-minnesota-mn108/
-    url = "https://www.petfinder.com/dog/{0}-{1}/{2}/{3}/{4}-{5}"
-    name = dog['name']['$t'].lower().replace(' ','-')
-    dogId = dog['id']['$t']
-    state = dog['contact']['state']['$t'].lower().replace(' ','-')
-    city = dog['contact']['city']['$t'].lower().replace(' ','-')
-    shelterId = dog['shelterId']['$t']
-    shelterName = getShelterName(shelterId).lower().replace(' ','-')
+def getUrlForDog(dog):
+    try:
 
-    return url.format(name, dogId, state, city, shelterName, shelterId.lower().replace(' ','-'))
+        #https://www.petfinder.com/dog/lucy-40607778/mn/elk-river/aussie-rescue-of-minnesota-mn108/
+        url = "https://www.petfinder.com/dog/{0}-{1}/{2}/{3}/{4}-{5}"
+        name = dog['name']['$t'].lower().replace(' ','-')
+        dogId = dog['id']['$t']
+        state = dog['contact']['state']['$t'].lower().replace(' ','-')
+        city = dog['contact']['city']['$t'].lower().replace(' ','-')
+        shelterId = dog['shelterId']['$t']
+        shelterName = getShelterName(shelterId).lower().replace(' ','-')
+
+        return url.format(name, dogId, state, city, shelterName, shelterId.lower().replace(' ','-'))
+    except:
+        return ''
 
 def getShelterName(shelterId):
     data = {
@@ -62,10 +66,8 @@ def getShelterName(shelterId):
 
     request = requests.get('http://api.petfinder.com/shelter.get', params=data)
     jsonDict = request.json()
-    
-    return jsonDict['petfinder']['shelter']['name']['$t']
 
-print(getShelterName('MN108'))
+    return jsonDict['petfinder']['shelter']['name']['$t']
 
 sortedDogs = searchForDogs()
 newIds = list(map(lambda dog: dog['id']['$t'], sortedDogs))
