@@ -45,6 +45,7 @@ def getUrlForDog(dog):
     try:
 
         #https://www.petfinder.com/dog/lucy-40607778/mn/elk-river/aussie-rescue-of-minnesota-mn108/
+        #https://www.petfinder.com/dog/romey-39291873/ia/davenport/k9-kindness-rescue-inc-ia96/
         url = "https://www.petfinder.com/dog/{0}-{1}/{2}/{3}/{4}-{5}"
         name = dog['name']['$t'].lower().replace(' ','-')
         dogId = dog['id']['$t']
@@ -69,6 +70,12 @@ def getShelterName(shelterId):
 
     return jsonDict['petfinder']['shelter']['name']['$t']
 
+def getPhotoForDog(dog):
+    try:
+        return dog['media']['photos']['photo'][2]['$t']
+    except:
+        return ''
+
 sortedDogs = searchForDogs()
 newIds = list(map(lambda dog: dog['id']['$t'], sortedDogs))
 
@@ -87,7 +94,7 @@ if len(diffDogs) != 0:
         attachments = []
         data['attachments'] = attachments
 
-        attachments.append(newDogAttachment(dog['name']['$t'], getUrlForDog(dog), dog['media']['photos']['photo'][2]['$t']))
+        attachments.append(newDogAttachment(dog['name']['$t'], getUrlForDog(dog), getPhotoForDog(dog)))
 
         requests.post(sys.argv[2], json=data)
 
