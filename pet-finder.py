@@ -84,5 +84,5 @@ if len(diffDogs) != 0:
         requests.post(sys.argv[2], json=data)
 
 
-with open(petsFileName, "w") as dogFile:    
+with open(petsFileName, "w") as dogFile:
     dogFile.write("\n".join(list(set().union(newIds,oldDogs))))
