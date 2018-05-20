@@ -70,7 +70,7 @@ diffDogs = [dog for dog in newIds if dog not in oldDogs]
 
 if len(diffDogs) != 0:
 
-    data = {'text' : '@here new dogs!'}
+    data = {'text' : '<!here> new dogs!'}
     requests.post(sys.argv[2], json=data)
 
     for newDog in diffDogs:
@@ -84,5 +84,5 @@ if len(diffDogs) != 0:
         requests.post(sys.argv[2], json=data)
 
 
-with open(petsFileName, "w") as dogFile:
-    dogFile.write("\n".join(newIds))
+with open(petsFileName, "w") as dogFile:    
+    dogFile.write("\n".join(list(set().union(newIds,oldDogs))))
