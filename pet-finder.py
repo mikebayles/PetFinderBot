@@ -6,7 +6,7 @@ def searchForDogs():
     data = {
         'key' : sys.argv[1],
         'animal' : 'dog',
-        'breed' : 'Australian Shepherd',
+        'breed' : sys.argv[3],
         'location' : '55330',
         'count' : 100,
         'format' : 'json'
