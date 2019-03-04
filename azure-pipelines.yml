@@ -12,16 +12,14 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
 
+  variables:
+    - lastBuild: $(Build.BuildId)-1
+
   steps:
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@0
     inputs:
-      buildType: 'specific'
-      definition: $(Build.BuildId) - 1
-      project: $(System.TeamProjectId)
-      buildVersionToDownload: 'specific'
-      buildId: $(Build.BuildId) - 1
       artifactName: PetsOutput
-      downloadPath: $(Build.SourcesDirectory)
+      targetPath: $(System.DefaultWorkingDirectory)
 
   - task: CopyFiles@2
     inputs:
@@ -34,12 +32,7 @@ jobs:
   - script: python3 pet-finder.py $(apiKey) $(slackHook) "Australian Shepherd"
     displayName: 'Finding Pups'
 
-  - task: CopyFiles@2
+  - task: PublishPipelineArtifact@0
     inputs:
-      contents: 'pets.txt'
-      targetFolder: $(Build.ArtifactStagingDirectory)
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: PetsOutput
+      artifactName: 'PetsOutput'
+      targetPath: 'pets.txt'
