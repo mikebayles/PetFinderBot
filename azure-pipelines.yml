@@ -1,25 +1,24 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
 - master
 
 jobs:
 
 - job: 'Run'
+  variables:
+    lastBuild: $[Build.BuildId - 1]
   pool:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - task: CopyFiles@2
-    continueOnError: true
+  - task: DownloadBuildArtifacts@0
     inputs:
-      sourceFolder: '$(Build.ArtifactStagingDirectory)'
-      contents: '**/*/pets.txt' 
-      targetFolder: $(Build.SourcesDirectory)
-      overWrite: true
+      buildType: 'specific'
+      definition: $(lastBuild)
+      project: $(System.TeamProjectId)
+      buildVersionToDownload: 'specific'
+      buildId: $(lastBuild)
+      artifactName: PetsOutput
+      downloadPath: $(Build.SourcesDirectory)
 
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
@@ -27,7 +26,7 @@ jobs:
   - script: python3 pet-finder.py $(apiKey) $(slackHook) "Australian Shepherd"
     displayName: 'Finding Pups'
 
-  - task: PublishPipelineArtifact@0
+  - task: PublishBuildArtifacts@1
     inputs:
-      artifactName: 'PetsOutput' 
-      targetPath: 'pets.txt'
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: PetsOutput
