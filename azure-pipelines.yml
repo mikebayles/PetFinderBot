@@ -8,7 +8,7 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - script: echo '##vso[task.setvariable variable=lastBuild]$($(Build.buildId) - 1)'
+  - script: echo '##vso[task.setvariable variable=lastBuild]$[$(Build.buildId) - 1]'
 
   - task: DownloadBuildArtifacts@0
     inputs:
