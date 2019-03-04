@@ -16,5 +16,5 @@ jobs:
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
 
-  - script: python3 pet-finder.py apiKey slackHook "breed"
-    displayName: 'Finding Pups'      
+  - script: python3 pet-finder.py $(apiKey) $(slackHook) "Australian Shepherd"
+    displayName: 'Finding Pups'
