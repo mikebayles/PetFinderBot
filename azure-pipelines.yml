@@ -13,7 +13,7 @@ jobs:
       Write-Host "##vso[task.setvariable variable=lastBuild]$lastBuild"    
     displayName: Get last build number
 
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@1
     continueOnError: true
     inputs:
       buildType: 'specific'
@@ -30,7 +30,7 @@ jobs:
   - script: python3 pet-finder.py $(apiKey) $(slackHook) "Australian Shepherd"
     displayName: 'Finding Pups'
 
-  - task: PublishBuildArtifacts@1
+  - task: PublishPipelineArtifact@0
     inputs:
-      pathtoPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: PetsOutput
+      artifactName: 'PetsOutput' 
+      targetPath: pets.txt
