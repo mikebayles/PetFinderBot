@@ -14,6 +14,7 @@ jobs:
     displayName: Get last build number
 
   - task: DownloadBuildArtifacts@0
+    continueOnError: true
     inputs:
       buildType: 'specific'
       definition: $(lastBuild)
