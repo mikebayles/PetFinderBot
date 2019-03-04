@@ -16,9 +16,9 @@ jobs:
   - task: DownloadBuildArtifacts@0
     continueOnError: true
     inputs:
-      buildType: 'current'
+      buildType: 'specific'
       #specificBuildWithTriggering: false # Optional
-      #buildVersionToDownload: 'latest' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
+      buildVersionToDownload: 'specific' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
       #allowPartiallySucceededBuilds: false # Optional
       #branchName: 'refs/heads/master' # Required when buildType == Specific && BuildVersionToDownload == LatestFromBranch
       buildId: $(Build.BuildId) - 1
