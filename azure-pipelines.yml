@@ -17,6 +17,7 @@ jobs:
     continueOnError: true
     inputs:
       buildType: 'specific'
+      project: $(System.TeamProjectId)
       #specificBuildWithTriggering: false # Optional
       buildVersionToDownload: 'specific' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
       #allowPartiallySucceededBuilds: false # Optional
@@ -28,6 +29,11 @@ jobs:
       #itemPattern: '**' # Optional
       downloadPath: $(Build.SourcesDirectory)
 
+  - task: CopyFiles@2
+    inputs:
+      contents: '$(Build.SourcesDirectory)/PetsOutput/pets.txt'
+      targetFolder: $(Build.SourcesDirectory)
+
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
 
@@ -38,6 +44,7 @@ jobs:
     inputs:
       contents: 'pets.txt'
       targetFolder: $(Build.ArtifactStagingDirectory)
+
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: $(Build.ArtifactStagingDirectory)
