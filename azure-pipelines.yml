@@ -10,15 +10,7 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - task: DownloadBuildArtifacts@0
-    inputs:
-      buildType: 'specific'
-      definition: $(lastBuild)
-      project: $(System.TeamProjectId)
-      buildVersionToDownload: 'specific'
-      buildId: $(lastBuild)
-      artifactName: PetsOutput
-      downloadPath: $(Build.SourcesDirectory)
+
 
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
