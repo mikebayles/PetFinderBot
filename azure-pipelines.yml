@@ -13,7 +13,7 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - script: python3 -m pip3 install --upgrade pip && pip install -r requirements.txt
+  - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
 
   - script: python3 pet-finder.py apiKey slackHook "breed"
