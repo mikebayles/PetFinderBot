@@ -16,6 +16,7 @@ jobs:
   - task: DownloadBuildArtifacts@0
     inputs:
       buildType: 'specific'
+      definition: $(Build.BuildId) - 1
       project: $(System.TeamProjectId)
       buildVersionToDownload: 'specific'
       buildId: $(Build.BuildId) - 1
