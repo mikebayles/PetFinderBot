@@ -8,7 +8,10 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - powershell: echo '##vso[task.setvariable variable=lastBuild]$(Build.buildId) - 1'
+  - powershell: |
+      Set-Variable -Name lastBuild -Value ($(Build.buildId) - 1)
+      Write-Host "##vso[task.setvariable variable=lastBuild]$lastBuild"    
+    displayName: Get last build number
 
   - task: DownloadBuildArtifacts@0
     inputs:
