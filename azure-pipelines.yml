@@ -17,7 +17,7 @@ jobs:
     continueOnError: true
     inputs:
       buildType: 'specific'
-      definition: $(lastBuild)
+      definition: $(Build.DefinitionName)
       project: $(System.TeamProjectId)
       buildVersionToDownload: 'specific'
       buildId: $(lastBuild)
