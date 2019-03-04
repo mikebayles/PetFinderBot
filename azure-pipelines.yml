@@ -12,9 +12,6 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
 
-  variables:
-    - lastBuild: $(Build.BuildId)-1
-
   steps:
   - task: DownloadPipelineArtifact@0
     inputs:
