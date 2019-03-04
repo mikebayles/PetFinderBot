@@ -30,4 +30,4 @@ jobs:
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: 'PetsOutput' 
-      targetPath: '$(Build.ArtifactStagingDirectory)'
+      targetPath: 'pets.txt'
