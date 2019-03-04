@@ -14,19 +14,12 @@ jobs:
 
   steps:
   - task: DownloadBuildArtifacts@0
-    continueOnError: true
     inputs:
       buildType: 'specific'
       project: $(System.TeamProjectId)
-      #specificBuildWithTriggering: false # Optional
-      buildVersionToDownload: 'specific' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
-      #allowPartiallySucceededBuilds: false # Optional
-      #branchName: 'refs/heads/master' # Required when buildType == Specific && BuildVersionToDownload == LatestFromBranch
+      buildVersionToDownload: 'specific'
       buildId: $(Build.BuildId) - 1
-      #tags: # Optional
-      #downloadType: 'single' # Options: single, specific
       artifactName: PetsOutput
-      #itemPattern: '**' # Optional
       downloadPath: $(Build.SourcesDirectory)
 
   - task: CopyFiles@2
