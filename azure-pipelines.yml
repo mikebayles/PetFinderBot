@@ -15,6 +15,16 @@ jobs:
   steps:
   - task: DownloadBuildArtifacts@0
     inputs:
+      buildType: 'current'
+      #specificBuildWithTriggering: false # Optional
+      #buildVersionToDownload: 'latest' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
+      #allowPartiallySucceededBuilds: false # Optional
+      #branchName: 'refs/heads/master' # Required when buildType == Specific && BuildVersionToDownload == LatestFromBranch
+      #buildId: # Required when buildType == Specific && BuildVersionToDownload == Specific
+      #tags: # Optional
+      #downloadType: 'single' # Options: single, specific
+      artifactName: PetsOutput
+      #itemPattern: '**' # Optional
       downloadPath: $(Build.SourcesDirectory)
 
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
