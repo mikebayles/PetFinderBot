@@ -13,8 +13,21 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      downloadPath: $(Build.SourcesDirectory)
+
   - script: python3 -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
 
   - script: python3 pet-finder.py $(apiKey) $(slackHook) "Australian Shepherd"
     displayName: 'Finding Pups'
+
+  - task: CopyFiles@2
+    inputs:
+      contents: 'pets.txt'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: PetsOutput
