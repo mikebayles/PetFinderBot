@@ -1,4 +1,4 @@
-$url = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI/$env:SYSTEM_COLLECTIONID/$env:SYSTEM_TEAMPROJECTID/_apis/build/latest/$env:SYSTEM_DEFINITIONID"
+$url = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_apis/build/latest/$env:SYSTEM_DEFINITIONID"
 Write-Host "URL: $url"
 $response = Invoke-RestMethod -Uri $url -Method Get -ContentType "application/json"
 $lastBuild = $result.id
