@@ -9,11 +9,11 @@ jobs:
 
   steps:
   - task: DownloadPipelineArtifact@1
-    continueOnError: true
     inputs:
       buildType: 'specific'
       definition: $(Build.DefinitionName)
       project: $(System.TeamProjectId)
+      buildVersionToDownload : 'latest'
       artifactName: PetsOutput
       downloadPath: $(Build.SourcesDirectory)
 
