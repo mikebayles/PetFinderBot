@@ -16,6 +16,7 @@ jobs:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
   - task: DownloadPipelineArtifact@1
+    continueOnError: true
     inputs:
       buildType: 'specific'
       definition: $(System.DefinitionId)
