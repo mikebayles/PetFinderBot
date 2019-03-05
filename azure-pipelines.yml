@@ -8,11 +8,6 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - powershell: |
-      Set-Variable -Name lastBuild -Value ($(Build.buildId) - 1)
-      Write-Host "##vso[task.setvariable variable=lastBuild]$lastBuild"    
-    displayName: Get last build number
-
   - task: DownloadPipelineArtifact@1
     continueOnError: true
     inputs:
@@ -30,5 +25,5 @@ jobs:
 
   - task: PublishPipelineArtifact@0
     inputs:
-      artifactName: 'PetsOutput' 
+      artifactName: 'PetsOutput'
       targetPath: pets.txt
