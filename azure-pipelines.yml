@@ -21,8 +21,7 @@ jobs:
       definition: $(System.DefinitionId)
       project: $(System.TeamProjectId)
       buildVersionToDownload : 'specific'
-      buildId: $(lastBuild)
-      branchName: 'refs/heads/master'
+      buildId: $(lastBuild)      
       artifactName: PetsOutput
       downloadPath: $(Build.SourcesDirectory)
 
