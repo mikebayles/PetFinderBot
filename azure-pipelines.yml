@@ -20,7 +20,8 @@ jobs:
       buildType: 'specific'
       definition: $(System.DefinitionId)
       project: $(System.TeamProjectId)
-      buildVersionToDownload : 'latestFromBranch'
+      buildVersionToDownload : 'specific'
+      buildId: $(lastBuild)
       branchName: 'refs/heads/master'
       artifactName: PetsOutput
       downloadPath: $(Build.SourcesDirectory)
