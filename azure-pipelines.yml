@@ -12,6 +12,8 @@ jobs:
     inputs:
       targetType: filePath
       filePath: 'getLatestBuild.ps1'
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
   - task: DownloadPipelineArtifact@1
     inputs:
