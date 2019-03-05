@@ -8,14 +8,10 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - task: InvokeRESTAPI@1
+  - task: PowerShell@2
     inputs:
-      method: GET
-      connectionType: connectedServiceName
-      serviceConnection: 'generic'
-      waitForCompletion: true
-      urlSuffix: '$(System.TeamFoundationCollectionUri)/$(System.CollectionId)/$(System.TeamProjectId)/_apis/build/latest/$(System.DefinitionId)&api-version=5.0-preview.1'
-
+      targetType: filePath
+      filePath: 'getLatestBuild.ps1'
 
   - task: DownloadPipelineArtifact@1
     inputs:
