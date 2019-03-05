@@ -19,8 +19,6 @@ jobs:
       buildType: 'specific'
       definition: $(Build.DefinitionName)
       project: $(System.TeamProjectId)
-      buildVersionToDownload: 'specific'
-      buildId: $(lastBuild)
       artifactName: PetsOutput
       downloadPath: $(Build.SourcesDirectory)
 
