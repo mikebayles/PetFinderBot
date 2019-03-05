@@ -11,7 +11,7 @@ jobs:
   - task: DownloadPipelineArtifact@1
     inputs:
       buildType: 'specific'
-      definition: $(Build.DefinitionName)
+      definition: $(System.DefinitionId)
       project: $(System.TeamProjectId)
       buildVersionToDownload : 'latest'
       artifactName: PetsOutput
