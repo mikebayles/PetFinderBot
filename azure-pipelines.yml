@@ -22,7 +22,7 @@ jobs:
       definition: $(System.DefinitionId)
       project: $(System.TeamProjectId)
       buildVersionToDownload : 'specific'
-      buildId: $(lastBuild)      
+      buildId: $(lastBuild)
       artifactName: PetsOutput
       downloadPath: $(Build.SourcesDirectory)
 
