@@ -1,6 +1,6 @@
 $url = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_apis/build/latest/$env:SYSTEM_DEFINITIONID"
 Write-Host "URL: $url"
-$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Bearer $env:TOKEN"}
+$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN "}
 Write-Host "response = $response"
 $lastBuild = $result.id
 Write-Host "LastBuild = $lastBuild"
