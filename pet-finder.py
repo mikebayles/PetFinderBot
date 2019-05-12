@@ -15,6 +15,7 @@ def searchForDogs():
     request = requests.get('http://api.petfinder.com/pet.find', params=data)
     jsonDict = request.json()
 
+    print("DEBUG", jsonDict)
     pets = jsonDict['petfinder']['pets']['pet']
 
     sortedPets = sorted(pets, key=lambda k: k['id']['$t'])
