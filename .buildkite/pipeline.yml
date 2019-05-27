@@ -1,0 +1,5 @@
+steps:
+  - label: ":python:"
+    commands:
+      - pip install requirements.txt
+      - python pet-finder.py
