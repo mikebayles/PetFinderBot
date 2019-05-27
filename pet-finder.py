@@ -1,89 +1,118 @@
-import requests, csv, json, sys
+from botocore.vendored import requests
+from boto3.dynamodb.conditions import Key, Attr
+from botocore.exceptions import ClientError
+import os
+import boto3
+import json
 
-petsFileName = 'pets.txt'
+dynamodb = boto3.resource('dynamodb')
 
-def searchForDogs():
+
+def search_for_dogs():
     data = {
-        'key' : sys.argv[1],
-        'animal' : 'dog',
-        'breed' : sys.argv[3],
-        'location' : '55330',
-        'count' : 100,
-        'format' : 'json'
+        'key': os.environ['api_key'],
+        'animal': 'dog',
+        'breed': os.environ['breed'],
+        'location': os.environ['zip'],
+        'count': 30,
+        'format': 'json',
+        'output': 'basic'
     }
 
     request = requests.get('http://api.petfinder.com/pet.find', params=data)
-    jsonDict = request.json()
+    json_dict = request.json()
 
-    print("DEBUG", jsonDict)
-    pets = jsonDict['petfinder']['pets']['pet']
+    pets = json_dict['petfinder']['pets']['pet']
 
-    sortedPets = sorted(pets, key=lambda k: k['id']['$t'])
+    return pets
 
-    return sortedPets
 
-def loadOldDogs():
-    try:
-        with open(petsFileName, "r") as dogFile:
-            return dogFile.read()
-    except:
-        return ""
-
-def newDogAttachment(name, url, image):
+def new_dog_attachment(name, url, image):
     data = {
-        'title' : name,
-        'title_link' : url,
-        'image_url' : image
+        'title': name,
+        'title_link': url,
+        'image_url': image
     }
     return data
 
-def getDogForId(id, allDogs):
-    for dog in allDogs:
-        if dog['id']['$t'] == id:
+
+def get_dog_for_id(dog_id, all_dogs):
+    for dog in all_dogs:
+        if dog['id']['$t'] == dog_id:
             return dog
 
-def getUrlForDog(dog):
-    try:
-        url = "https://www.petfinder.com/petdetail/{0}"
-        dogId = dog['id']['$t']
 
-        return url.format(dogId)
-    except:
-        return ''
+def get_url_for_dog(dog):
+    url = "https://www.petfinder.com/petdetail/{0}"
+    dog_id = dog['id']['$t']
 
-    request = requests.get('http://api.petfinder.com/shelter.get', params=data)
-    jsonDict = request.json()
+    return url.format(dog_id)
 
-    return jsonDict['petfinder']['shelter']['name']['$t']
 
-def getPhotoForDog(dog):
-    try:
-        return dog['media']['photos']['photo'][2]['$t']
-    except:
-        return ''
+def get_photo_for_dog(dog):
+    sizes = {
+        'x': [],
+        't': [],
+        'pn': [],
+        'pnt': [],
+        'fpm': []
+    }
 
-sortedDogs = searchForDogs()
-newIds = list(map(lambda dog: dog['id']['$t'], sortedDogs))
+    for photo in dog['media']['photos']['photo']:
+        size = photo['@size']
+        sizes[size].append(photo['$t'])
 
-oldDogs = loadOldDogs().splitlines()
+    for key in sorted(sizes, reverse=True):
+        if len(sizes[key]) > 0:
+            return sizes[key][0]
 
-diffDogs = [dog for dog in newIds if dog not in oldDogs]
+    return ''
 
-if len(diffDogs) != 0:
 
-    data = {'text' : '<!here> new dogs!'}
-    requests.post(sys.argv[2], json=data)
+def get_new_dogs(dogs):
+    new_dogs = []
+    table = dynamodb.Table('Pets')
 
-    for newDog in diffDogs:
-        dog = getDogForId(newDog, sortedDogs)
+    for dog in dogs:
+        try:
+            resp = table.put_item(
+                Item={
+                    'id': dog['id']['$t'],
+                },
+                ConditionExpression=Attr('id').not_exists())
+
+            print(resp)
+            new_dogs.append(dog)
+
+        except ClientError as e:
+            print(e)
+
+    return new_dogs
+
+
+def main():
+    all_dogs = search_for_dogs()
+    new_dogs = get_new_dogs(all_dogs)
+
+    slack_hook = os.environ['slack_hook']
+
+    for dog in new_dogs:
         data = {}
         attachments = []
         data['attachments'] = attachments
 
-        attachments.append(newDogAttachment(dog['name']['$t'], getUrlForDog(dog), getPhotoForDog(dog)))
+        attachments.append(new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), get_photo_for_dog(dog)))
 
-        requests.post(sys.argv[2], json=data)
+        requests.post(slack_hook, json=data)
 
 
-with open(petsFileName, "w") as dogFile:
-    dogFile.write("\n".join(list(set().union(newIds,oldDogs))))
+def lambda_handler(event, context):
+    main()
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }
+
+
+if __name__ == "__main__":
+    main()
