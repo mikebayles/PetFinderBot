@@ -58,15 +58,16 @@ def get_photo_for_dog(dog):
         'fpm': []
     }
 
-    for photo in dog['media']['photos']['photo']:
-        size = photo['@size']
-        sizes[size].append(photo['$t'])
+    try:
+        for photo in dog['media']['photos']['photo']:
+            size = photo['@size']
+            sizes[size].append(photo['$t'])
 
-    for key in sorted(sizes, reverse=True):
-        if len(sizes[key]) > 0:
-            return sizes[key][0]
-
-    return ''
+        for key in sorted(sizes, reverse=True):
+            if len(sizes[key]) > 0:
+                return sizes[key][0]
+    except:
+        return ''
 
 
 def get_new_dogs(dogs):
