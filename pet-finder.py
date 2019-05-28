@@ -96,13 +96,14 @@ def main():
 
     slack_hook = os.environ['slack_hook']
 
-    for dog in new_dogs:
-        data = {'text': '<!here> new dogs!'}
-        attachments = []
-        data['attachments'] = attachments
+    data = {'text': '<!here> new dogs!'}
+    attachments = []
+    data['attachments'] = attachments
 
+    for dog in new_dogs:
         attachments.append(new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), get_photo_for_dog(dog)))
 
+    if len(attachments) > 0:
         requests.post(slack_hook, json=data)
 
 
