@@ -14,7 +14,7 @@ def search_for_dogs():
         'animal': 'dog',
         'breed': os.environ['breed'],
         'location': os.environ['zip'],
-        'count': 30,
+        'count': 100,
         'format': 'json',
         'output': 'basic'
     }
