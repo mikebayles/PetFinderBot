@@ -97,7 +97,7 @@ def main():
     slack_hook = os.environ['slack_hook']
 
     for dog in new_dogs:
-        data = {}
+        data = {'text': '<!here> new dogs!'}
         attachments = []
         data['attachments'] = attachments
 
