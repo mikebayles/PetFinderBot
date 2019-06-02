@@ -66,34 +66,40 @@ def get_photo_for_dog(dog):
         for key in sorted(sizes, reverse=True):
             if len(sizes[key]) > 0:
                 return sizes[key][0]
-    except:
-        return ''
+
+    except Exception as e:
+        print('Could not get photo', dog, e)
+
+    return None
 
 
-def get_new_dogs(dogs):
+def get_new_dogs_with_pics(dogs):
     new_dogs = []
     table = dynamodb.Table('Pets')
 
     for dog in dogs:
         try:
-            resp = table.put_item(
+            photo = get_photo_for_dog(dog)
+            if not photo:
+                continue
+
+            table.put_item(
                 Item={
                     'id': dog['id']['$t'],
                 },
                 ConditionExpression=Attr('id').not_exists())
 
-            print(resp)
-            new_dogs.append(dog)
+            new_dogs.append((dog, photo))
 
         except ClientError as e:
-            print(e)
+            pass
 
     return new_dogs
 
 
 def main():
     all_dogs = search_for_dogs()
-    new_dogs = get_new_dogs(all_dogs)
+    new_dogs = get_new_dogs_with_pics(all_dogs)
 
     slack_hook = os.environ['slack_hook']
 
@@ -101,19 +107,11 @@ def main():
     attachments = []
     data['attachments'] = attachments
 
-    for dog in new_dogs:
-        attachments.append(new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), get_photo_for_dog(dog)))
+    for (dog, photo) in new_dogs:
+        attachments.append(new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), photo))
 
     if len(attachments) > 0:
         requests.post(slack_hook, json=data)
-
-
-def lambda_handler(event, context):
-    main()
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
-    }
 
 
 if __name__ == "__main__":
