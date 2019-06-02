@@ -68,7 +68,7 @@ def get_photo_for_dog(dog):
                 return sizes[key][0]
 
     except Exception as e:
-        print('Could not get photo', dog, e)
+        print('Could not get photo', e)
 
     return None
 
