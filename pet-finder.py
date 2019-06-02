@@ -97,21 +97,27 @@ def get_new_dogs_with_pics(dogs):
     return new_dogs
 
 
+def send_notification(slack_hook):
+    data = {'text': '<!here> new dogs!'}
+    requests.post(slack_hook, json=data)
+
+
+def send_dog_message(dog, photo, slack_hook):
+    data = {'attachments': new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), photo)}
+    requests.post(slack_hook, json=data)
+
+
 def main():
     all_dogs = search_for_dogs()
     new_dogs = get_new_dogs_with_pics(all_dogs)
 
     slack_hook = os.environ['slack_hook']
 
-    data = {'text': '<!here> new dogs!'}
-    attachments = []
-    data['attachments'] = attachments
+    if len(new_dogs) > 0:
+        send_notification(slack_hook)
 
     for (dog, photo) in new_dogs:
-        attachments.append(new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), photo))
-
-    if len(attachments) > 0:
-        requests.post(slack_hook, json=data)
+        send_dog_message(dog, photo, slack_hook)
 
 
 if __name__ == "__main__":
