@@ -29,6 +29,7 @@ def search_for_dogs():
 
 def new_dog_attachment(name, url, image):
     data = {
+        'fallback': name,
         'title': name,
         'title_link': url,
         'image_url': image
@@ -103,7 +104,7 @@ def send_notification(slack_hook):
 
 
 def send_dog_message(dog, photo, slack_hook):
-    data = {'attachments': new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), photo)}
+    data = {'attachments': [new_dog_attachment(dog['name']['$t'], get_url_for_dog(dog), photo)]}
     requests.post(slack_hook, json=data)
 
 
